@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Exam Prep AI</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 16px;
+            width: 350px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            text-align: center;
+        }
+
+        h1 {
+            margin-bottom: 10px;
+        }
+
+        p {
+            color: #555;
+            font-size: 14px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px;
+            margin: 8px 0;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            font-size: 14px;
+            outline: none;
+            transition: 0.2s;
+        }
+
+        input:focus, select:focus {
+            border-color: #667eea;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            margin-top: 10px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        button:hover {
+            background: #5a67d8;
+        }
+
+        .count {
+            margin-top: 15px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .success {
+            color: green;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="card">
+    <h1>📚 Exam Prep AI</h1>
+    <p>Upload syllabus → Get best videos → Pass exams faster</p>
+
+    <form id="signupForm">
+        <input type="text" id="name" placeholder="Your Name" required>
+        <input type="email" id="email" placeholder="Email" required>
+        <input type="text" id="college" placeholder="College Name" required>
+
+        <select id="year" required>
+            <option value="">Select Year</option>
+            <option>1st Year</option>
+            <option>2nd Year</option>
+            <option>3rd Year</option>
+            <option>4th Year</option>
+        </select>
+
+        <button type="submit">Join Waitlist 🚀</button>
+    </form>
+
+    <div class="success" id="successMsg"></div>
+    <div class="count" id="count">Loading...</div>
+</div>
+
+<script>
+    const API = "http://127.0.0.1:8000";
+
+    document.getElementById("signupForm").addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const data = {
+            name: document.getElementById("name").value,
+            email: document.getElementById("email").value,
+            college: document.getElementById("college").value,
+            year: document.getElementById("year").value
+        };
+
+        await fetch(`${API}/signup`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(data)
+        });
+
+        document.getElementById("successMsg").innerText = "✅ You're in!";
+        document.getElementById("signupForm").reset();
+
+        loadCount();
+    });
+
+    async function loadCount() {
+        const res = await fetch(`${API}/count`);
+        const data = await res.json();
+        document.getElementById("count").innerText =
+            `🔥 ${data.count} students joined`;
+    }
+
+    loadCount();
+</script>
+
+</body>
+</html>
