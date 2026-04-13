@@ -19,7 +19,8 @@ app.add_middleware(
 # Connect to MongoDB
 
 
-client = MongoClient(os.getenv("MONGO_URI"))db = client["exam_prep"]
+client = MongoClient(os.getenv("MONGO_URI"))
+db = client["exam_prep"]
 users_collection = db["users"]
 
 # Model
