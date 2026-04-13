@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 from pymongo import MongoClient
 from fastapi.middleware.cors import CORSMiddleware
+import os
 
 app = FastAPI()
 
@@ -16,8 +17,9 @@ app.add_middleware(
 )
 
 # Connect to MongoDB
-client = MongoClient("mongodb+srv://admin:admin123@cluster.cymziw9.mongodb.net/?appName=Cluster")
-db = client["exam_prep"]
+
+
+client = MongoClient(os.getenv("MONGO_URI"))db = client["exam_prep"]
 users_collection = db["users"]
 
 # Model
