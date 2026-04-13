@@ -272,7 +272,7 @@ button {
         <form id="signupForm">
 
             <div class="input-group">
-                <input type="text" id="name" placeholder="Full Name" required>
+                <input type="text" id="fullname" placeholder="Full Name" required>
             </div>
 
             <div class="input-group">
@@ -307,12 +307,11 @@ document.getElementById("signupForm").addEventListener("submit", async (e) => {
     e.preventDefault();
 
     const data = {
-        name: name.value,
+        name: fullname.value,
         email: email.value,
         college: college.value,
         year: year.value
-    };
-
+    };    
     await fetch(`${API}/signup`, {
         method: "POST",
         headers: {"Content-Type":"application/json"},
