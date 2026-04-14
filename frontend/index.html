@@ -300,8 +300,18 @@ button {
     </div>
 </div>
 
+<div class="section">
+    <h2>Upload Your Syllabus</h2>
+
+    <input type="file" id="pdfFile">
+    <button onclick="uploadPDF()">Upload</button>
+
+    <pre id="output"></pre>
+</div>
+
 <script>
-    const API = "https://exam-prep-z5c4.onrender.com";
+    // const API = "https://exam-prep-z5c4.onrender.com";
+    const API = "http://127.0.0.1:8000"
 
 document.getElementById("signupForm").addEventListener("submit", async (e) => {
     e.preventDefault();
@@ -330,6 +340,22 @@ async function loadCount(){
 }
 
 loadCount();
+
+async function uploadPDF() {
+    const file = document.getElementById("pdfFile").files[0];
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    const res = await fetch(`${API}/upload-syllabus`, {
+        method: "POST",
+        body: formData
+    });
+
+    const data = await res.json();
+
+    document.getElementById("output").innerText = data.text;
+}
 </script>
 
 </body>
