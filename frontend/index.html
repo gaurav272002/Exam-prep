@@ -103,6 +103,7 @@ body {
     padding: 12px;
     border-radius: 8px;
     border: 1px solid #ddd;
+    box-sizing: border-box;
 }
 
 button {
@@ -113,6 +114,7 @@ button {
     color: white;
     border: none;
     border-radius: 8px;
+    cursor: pointer;
 }
 
 .count {
@@ -128,6 +130,7 @@ button {
         text-align: center;
     }
 }
+
 .btn {
     margin-top: 20px;
     padding: 12px 22px;
@@ -137,6 +140,198 @@ button {
     border-radius: 6px;
     cursor: pointer;
     max-width: 30%;
+}
+
+/* ---- UPLOAD + STUDY SECTION ---- */
+.upload-area {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 24px;
+}
+
+.upload-area input[type="file"] {
+    flex: 1;
+}
+
+.upload-btn {
+    width: auto;
+    margin-top: 0;
+    padding: 10px 20px;
+}
+
+#loading-msg {
+    color: #2563eb;
+    font-style: italic;
+    display: none;
+}
+
+/* STUDY LAYOUT */
+.study-layout {
+    display: flex;
+    gap: 24px;
+    align-items: flex-start;
+}
+
+/* SIDEBAR */
+#topic-sidebar {
+    width: 280px;
+    flex-shrink: 0;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.07);
+    max-height: 80vh;
+    overflow-y: auto;
+    padding: 12px 0;
+}
+
+.sidebar-semester {
+    font-weight: bold;
+    font-size: 13px;
+    color: #2563eb;
+    padding: 8px 16px 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.sidebar-subject {
+    font-weight: 600;
+    font-size: 13px;
+    color: #374151;
+    padding: 6px 16px 2px 20px;
+    cursor: pointer;
+}
+
+.sidebar-unit {
+    font-size: 12px;
+    color: #6b7280;
+    padding: 4px 16px 2px 28px;
+    font-style: italic;
+}
+
+.sidebar-topic {
+    font-size: 13px;
+    color: #111827;
+    padding: 5px 16px 5px 36px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background 0.15s;
+}
+
+.sidebar-topic:hover {
+    background: #eff6ff;
+    color: #2563eb;
+}
+
+.sidebar-topic.active {
+    background: #dbeafe;
+    color: #1d4ed8;
+    font-weight: 600;
+}
+
+/* VIDEO PANEL */
+#video-panel {
+    flex: 1;
+    min-width: 0;
+}
+
+#video-panel-placeholder {
+    background: white;
+    border-radius: 10px;
+    padding: 60px 20px;
+    text-align: center;
+    color: #9ca3af;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.07);
+}
+
+#main-player-wrap {
+    background: white;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.07);
+    display: none;
+}
+
+#topic-title {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 14px;
+    color: #111827;
+}
+
+#main-player iframe {
+    width: 100%;
+    height: 420px;
+    border-radius: 8px;
+    border: none;
+}
+
+.now-playing-channel {
+    margin-top: 8px;
+    font-size: 13px;
+    color: #6b7280;
+}
+
+.preferred-badge {
+    display: inline-block;
+    background: #f59e0b;
+    color: white;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 7px;
+    border-radius: 4px;
+    margin-left: 6px;
+    vertical-align: middle;
+}
+
+#more-videos-heading {
+    font-size: 14px;
+    font-weight: 600;
+    color: #374151;
+    margin: 18px 0 10px;
+}
+
+#more-videos {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.video-thumb-card {
+    width: 180px;
+    cursor: pointer;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #f3f4f6;
+    border: 2px solid transparent;
+    transition: border-color 0.15s;
+}
+
+.video-thumb-card:hover {
+    border-color: #2563eb;
+}
+
+.video-thumb-card.preferred-card {
+    border-color: #f59e0b;
+}
+
+.video-thumb-card img {
+    width: 100%;
+    display: block;
+}
+
+.video-thumb-info {
+    padding: 6px 8px;
+    font-size: 12px;
+    color: #374151;
+    line-height: 1.3;
+}
+
+.video-thumb-channel {
+    font-size: 11px;
+    color: #9ca3af;
+    margin-top: 2px;
 }
 </style>
 </head>
@@ -151,14 +346,14 @@ button {
         <h1>Finish Your Syllabus Without Guessing What To Study</h1>
 
         <p>
-            Most students don’t struggle because content is missing.
+            Most students don't struggle because content is missing.
             They struggle because there is too much of it.
         </p>
 
         <p>
             This tool removes that confusion completely by telling you exactly what to watch and what to ignore.
         </p>
-        <button class="btn" onclick="location.href='#form'" >Get Early Access</button>
+        <button class="btn" onclick="location.href='#form'">Get Early Access</button>
     </div>
     <img src="https://media.giphy.com/media/L8K62iTDkzGX6/giphy.gif">
 </div>
@@ -170,7 +365,7 @@ button {
             <h2>The Actual Problem Students Face</h2>
 
             <p>
-                When exams are near, students don’t have time to experiment.
+                When exams are near, students don't have time to experiment.
             </p>
 
             <p>
@@ -183,7 +378,7 @@ button {
             </p>
 
             <p>
-                The real issue is not lack of resources — it is lack of clarity.
+                The real issue is not lack of resources -- it is lack of clarity.
             </p>
         </div>
 
@@ -208,7 +403,7 @@ button {
             </p>
 
             <p>
-                Instead of searching, comparing, and guessing — you directly start studying.
+                Instead of searching, comparing, and guessing -- you directly start studying.
             </p>
         </div>
 
@@ -229,7 +424,7 @@ button {
             </p>
 
             <p>
-                You don’t need 10 lectures per topic.
+                You don't need 10 lectures per topic.
                 You need one that is clear and sufficient.
             </p>
 
@@ -249,7 +444,7 @@ button {
     <h2 style="text-align:center;">How It Works</h2>
 
     <p style="text-align:center; max-width:700px; margin:auto;">
-        Upload your syllabus → topics are extracted → best videos selected → you study without wasting time.
+        Upload your syllabus -> topics are extracted -> best videos selected -> you study without wasting time.
     </p>
 </div>
 
@@ -258,7 +453,7 @@ button {
     <h2 style="text-align:center;">Why This Was Built</h2>
 
     <p style="max-width:700px; margin:auto;">
-        This idea came from the same frustration every student faces during exams—
+        This idea came from the same frustration every student faces during exams --
         spending more time deciding what to study than actually studying.
     </p>
 </div>
@@ -266,11 +461,10 @@ button {
 <!-- FORM -->
 <div class="form-section" id="form">
     <div class="form-card">
-        <h2>🚀 Get Early Access</h2>
+        <h2>Get Early Access</h2>
         <p>Try it before your next exam cycle</p>
 
         <form id="signupForm">
-
             <div class="input-group">
                 <input type="text" id="fullname" placeholder="Full Name" required>
             </div>
@@ -293,68 +487,202 @@ button {
                 </select>
             </div>
 
-            <button type="submit">Join Now 🚀</button>
+            <button type="submit">Join Now</button>
         </form>
 
         <div class="count" id="count"></div>
     </div>
 </div>
 
-<div class="section">
-    <h2>Upload Your Syllabus</h2>
+<!-- STUDY SECTION -->
+<div class="section" id="study">
+    <h2>Study From Your Syllabus</h2>
+    <p style="color:#555; margin-bottom: 20px;">
+        Upload your syllabus PDF. We will extract every topic and find the best YouTube videos for each one.
+    </p>
 
-    <input type="file" id="pdfFile">
-    <button onclick="uploadPDF()">Upload</button>
+    <div class="upload-area">
+        <input type="file" id="pdfFile" accept=".pdf">
+        <button class="upload-btn" onclick="uploadPDF()">Upload Syllabus</button>
+        <span id="loading-msg">Extracting topics and finding videos... this may take a minute.</span>
+    </div>
 
-    <pre id="output"></pre>
+    <div class="study-layout">
+        <div id="topic-sidebar"></div>
+        <div id="video-panel">
+            <div id="video-panel-placeholder">
+                Upload a syllabus to get started.
+            </div>
+            <div id="main-player-wrap">
+                <div id="topic-title"></div>
+                <div id="main-player"></div>
+                <div class="now-playing-channel" id="now-playing-channel"></div>
+                <div id="more-videos-heading" style="display:none;">More videos</div>
+                <div id="more-videos"></div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script>
-    const API = "https://exam-prep-z5c4.onrender.com";
-    // const API = "http://127.0.0.1:8000"
+    // const API = "https://exam-prep-z5c4.onrender.com";
+    const API = "http://127.0.0.1:8000";
 
 document.getElementById("signupForm").addEventListener("submit", async (e) => {
     e.preventDefault();
 
     const data = {
-        name: fullname.value,
-        email: email.value,
-        college: college.value,
-        year: year.value
-    };    
+        name: document.getElementById("fullname").value,
+        email: document.getElementById("email").value,
+        college: document.getElementById("college").value,
+        year: document.getElementById("year").value
+    };
     await fetch(`${API}/signup`, {
         method: "POST",
-        headers: {"Content-Type":"application/json"},
+        headers: {"Content-Type": "application/json"},
         body: JSON.stringify(data)
     });
 
-    alert("You're in 🚀");
+    alert("You're in!");
     loadCount();
 });
 
-async function loadCount(){
+async function loadCount() {
     const res = await fetch(`${API}/count`);
     const data = await res.json();
-    document.getElementById("count").innerText =
-        `${data.count} students joined`;
+    document.getElementById("count").innerText = `${data.count} students joined`;
 }
 
 loadCount();
 
 async function uploadPDF() {
     const file = document.getElementById("pdfFile").files[0];
+    if (!file) {
+        alert("Please select a PDF file.");
+        return;
+    }
+
+    document.getElementById("loading-msg").style.display = "inline";
+    document.getElementById("topic-sidebar").innerHTML = "";
+    document.getElementById("video-panel-placeholder").style.display = "block";
+    document.getElementById("main-player-wrap").style.display = "none";
 
     const formData = new FormData();
     formData.append("file", file);
 
-    const res = await fetch(`${API}/upload-syllabus`, {
-        method: "POST",
-        body: formData
-    });
+    try {
+        const res = await fetch(`${API}/upload-syllabus`, {
+            method: "POST",
+            body: formData
+        });
 
-    const data = await res.json();
+        if (!res.ok) {
+            alert("Server error: " + res.status);
+            document.getElementById("loading-msg").style.display = "none";
+            return;
+        }
 
-    document.getElementById("output").innerText = data.text;
+        const data = await res.json();
+        document.getElementById("loading-msg").style.display = "none";
+        renderStudyView(data);
+    } catch (err) {
+        document.getElementById("loading-msg").style.display = "none";
+        alert("Failed to connect to backend. Make sure the server is running.");
+    }
+}
+
+function renderStudyView(data) {
+    const sidebar = document.getElementById("topic-sidebar");
+    sidebar.innerHTML = "";
+    document.getElementById("video-panel-placeholder").style.display = "none";
+
+    for (const sem in data) {
+        const semEl = document.createElement("div");
+        semEl.className = "sidebar-semester";
+        semEl.textContent = sem;
+        sidebar.appendChild(semEl);
+
+        for (const subj in data[sem]) {
+            const subjEl = document.createElement("div");
+            subjEl.className = "sidebar-subject";
+            subjEl.textContent = subj;
+            sidebar.appendChild(subjEl);
+
+            for (const unit in data[sem][subj]) {
+                const unitEl = document.createElement("div");
+                unitEl.className = "sidebar-unit";
+                unitEl.textContent = unit;
+                sidebar.appendChild(unitEl);
+
+                const topics = data[sem][subj][unit];
+                for (const topicName in topics) {
+                    const videos = topics[topicName];
+                    const topicEl = document.createElement("div");
+                    topicEl.className = "sidebar-topic";
+                    topicEl.textContent = topicName;
+                    topicEl.onclick = function() {
+                        document.querySelectorAll(".sidebar-topic").forEach(t => t.classList.remove("active"));
+                        topicEl.classList.add("active");
+                        playTopic(topicName, videos);
+                    };
+                    sidebar.appendChild(topicEl);
+                }
+            }
+        }
+    }
+}
+
+function playTopic(topicName, videos) {
+    if (!videos || videos.length === 0) {
+        document.getElementById("topic-title").textContent = topicName;
+        document.getElementById("main-player").innerHTML = "<p style='color:#9ca3af;'>No videos found for this topic.</p>";
+        document.getElementById("now-playing-channel").textContent = "";
+        document.getElementById("more-videos").innerHTML = "";
+        document.getElementById("more-videos-heading").style.display = "none";
+        document.getElementById("main-player-wrap").style.display = "block";
+        return;
+    }
+
+    const first = videos[0];
+    document.getElementById("topic-title").textContent = topicName;
+    document.getElementById("main-player").innerHTML =
+        `<iframe src="https://www.youtube.com/embed/${first.video_id}" allowfullscreen></iframe>`;
+
+    const channelText = first.channel +
+        (first.is_preferred ? `<span class="preferred-badge">${first.channel}</span>` : "");
+    document.getElementById("now-playing-channel").innerHTML = channelText;
+
+    // More videos (remaining)
+    const moreEl = document.getElementById("more-videos");
+    moreEl.innerHTML = "";
+    const rest = videos.slice(1);
+
+    if (rest.length > 0) {
+        document.getElementById("more-videos-heading").style.display = "block";
+        rest.forEach(v => {
+            const card = document.createElement("div");
+            card.className = "video-thumb-card" + (v.is_preferred ? " preferred-card" : "");
+            card.innerHTML = `
+                <img src="https://img.youtube.com/vi/${v.video_id}/mqdefault.jpg" alt="${v.title}">
+                <div class="video-thumb-info">
+                    ${v.title.substring(0, 60)}${v.title.length > 60 ? "..." : ""}
+                    ${v.is_preferred ? `<span class="preferred-badge">${v.channel}</span>` : ""}
+                    <div class="video-thumb-channel">${v.channel}</div>
+                </div>
+            `;
+            card.onclick = () => {
+                document.getElementById("main-player").innerHTML =
+                    `<iframe src="https://www.youtube.com/embed/${v.video_id}" allowfullscreen></iframe>`;
+                const ch = v.channel + (v.is_preferred ? `<span class="preferred-badge">${v.channel}</span>` : "");
+                document.getElementById("now-playing-channel").innerHTML = ch;
+            };
+            moreEl.appendChild(card);
+        });
+    } else {
+        document.getElementById("more-videos-heading").style.display = "none";
+    }
+
+    document.getElementById("main-player-wrap").style.display = "block";
 }
 </script>
 

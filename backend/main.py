@@ -1,56 +1,55 @@
-from fastapi import FastAPI
+import io
+import json
+import os
+import re
+
+import PyPDF2
+import requests
+from dotenv import load_dotenv
+from fastapi import FastAPI, File, UploadFile
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from pymongo import MongoClient
-from fastapi.middleware.cors import CORSMiddleware
-from fastapi import UploadFile, File
-from openai import OpenAI
-import PyPDF2
-import io
-import os
-import json
-import requests
+
+from backend.youtube import search_videos_for_topic
+
+load_dotenv()
 
 app = FastAPI()
 
-
-
-
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # allow all (for now)
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
 # Connect to MongoDB
-
-
 client = MongoClient(os.getenv("MONGO_URI"))
 db = client["exam_prep"]
 users_collection = db["users"]
 
-# Model
+
 class User(BaseModel):
     name: str
     email: str
     college: str
     year: str
 
-# Signup API
+
 @app.post("/signup")
 def signup(user: User):
     users_collection.insert_one(user.dict())
     return {"message": "User saved"}
 
-# Count API
+
 @app.get("/count")
 def get_count():
     count = users_collection.count_documents({})
     return {"count": count}
 
 
-# Upload syllabus
 @app.post("/upload-syllabus")
 async def upload_syllabus(file: UploadFile = File(...)):
     contents = await file.read()
@@ -68,16 +67,22 @@ async def upload_syllabus(file: UploadFile = File(...)):
         ai_output = extract_with_ai(chunk)
         results.append(ai_output)
 
-    final_data = merge_results(results)
+    syllabus = merge_results(results)
 
-    return final_data
+    # Attach YouTube videos for each topic
+    for sem, subjects in syllabus.items():
+        for subj, units in subjects.items():
+            for unit, topics in units.items():
+                topic_videos = {}
+                for topic in topics:
+                    topic_videos[topic] = search_videos_for_topic(topic)
+                syllabus[sem][subj][unit] = topic_videos
+
+    return syllabus
+
 
 def chunk_text(text, chunk_size=2000):
-    return [text[i:i+chunk_size] for i in range(0, len(text), chunk_size)]
-
-
-
-
+    return [text[i:i + chunk_size] for i in range(0, len(text), chunk_size)]
 
 
 def extract_with_ai(chunk):
@@ -110,11 +115,11 @@ Rules:
 Text:
 {chunk}
 """
-    print("In Ai ")
+    print("Calling AI...")
     response = requests.post(
         "https://openrouter.ai/api/v1/chat/completions",
         headers={
-            "Authorization": "Bearer ",
+            "Authorization": f"Bearer {os.getenv('OPENROUTER_API_KEY')}",
             "Content-Type": "application/json"
         },
         json={
@@ -130,19 +135,29 @@ Text:
     return result["choices"][0]["message"]["content"]
 
 
-
 def merge_results(results):
     final = {}
 
     for r in results:
-        data = json.loads(r)
+        # Strip markdown code fences if present
+        cleaned = re.sub(r"```(?:json)?\s*", "", r).strip().rstrip("`").strip()
+
+        try:
+            data = json.loads(cleaned)
+        except json.JSONDecodeError:
+            print(f"Could not parse AI response: {cleaned[:200]}")
+            continue
 
         for sem, subjects in data.items():
             if sem not in final:
                 final[sem] = {}
 
             for subj, units in subjects.items():
-                final[sem][subj] = units
+                if subj not in final[sem]:
+                    final[sem][subj] = {}
+                for unit, topics in units.items():
+                    if unit not in final[sem][subj]:
+                        final[sem][subj][unit] = []
+                    final[sem][subj][unit].extend(topics)
 
     return final
-
